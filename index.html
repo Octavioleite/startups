@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serviços para Condomínios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos Gerais */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f4f4f4, #eaeaea);
+            color: #333;
+            line-height: 1.6;
+        }
+        .menu-lateral {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 60px;
+            background: linear-gradient(135deg, #333, #444);
+            transition: width 0.3s ease;
+            overflow: hidden;
+            color: white;
+            z-index: 1000;
+            box-shadow: 3px 0 8px rgba(0, 0, 0, 0.2);
+        }
+        .menu-lateral:hover {
+            width: 220px;
+        }
+        .menu-lateral a, .menu-lateral button {
+            color: white;
+            text-decoration: none;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: background 0.3s ease;
+        }
+        .menu-lateral a:hover, .menu-lateral button:hover {
+            background-color: #555;
+        }
+        .menu-lateral a i {
+            font-size: 24px;
+        }
+        header {
+            background: linear-gradient(135deg, #28a745, #34b457);
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            font-size: 0.9em;
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .servicos, .pedido-container, .link-site {
+            padding: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .servico, .pedido, .equipe {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px;
+            width: 280px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .servico:hover, .pedido:hover, .equipe:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+        }
+        .servico button, .pedido button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .servico button:hover, .pedido button:hover {
+            background-color: #218838;
+        }
+        .pedido button.excluir {
+            background-color: #dc3545;
+        }
+        .pedido button.excluir:hover {
+            background-color: #c82333;
+        }
+        .carrossel img {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            object-fit: cover;
+            display: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .carrossel img.active {
+            display: block;
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+            z-index: 1001;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.3s ease;
+        }
+        .btn-login, .btn-logout {
+            margin-top: 20px;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #34b457;
+            color: white;
+            border: none;
+            transition: background 0.3s ease;
+        }
+        .btn-login:hover, .btn-logout:hover {
+            background-color: #218838;
+        }
+        /* Estilos da Seção Link do Site */
+        .link-site {
+            background-color: #fff;
+            padding: 60px 40px;
+            text-align: center;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .link-site h2 {
+            font-size: 2.5em;
+            margin-bottom: 25px;
+        }
+        .link-site p {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #666;
+        }
+        .equipe {
+            width: 220px;
+        }
+        .equipe img {
+            width: 100%;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .protótipo {
+            margin: 30px 0;
+        }
+        .protótipo iframe {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 600px;
+            height: 400px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast de Notificação -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Menu Lateral -->
+    <div class="menu-lateral">
+        <a href="#sobre"><i>🏠</i><span>Home</span></a>
+        <a href="#servicos"><i>🛠️</i><span>Serviços</span></a>
+        <a href="#pedido-container"><i>📄</i><span>Pedidos</span></a>
+        <a href="#contato"><i>📞</i><span>Contato</span></a>
+        <a href="#link-site"><i>🌐</i><span>Link do Site</span></a>
+        <button class="btn-login" onclick="login()">Login</button>
+        <button class="btn-logout" onclick="logout()" style="display: none;">Logout</button>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <header>
+        <h1>Serviços para Condomínios</h1>
+        <p>Facilitando a gestão dos seus serviços</p>
+    </header>
+
+    <!-- Carrossel -->
+    <section class="carrossel" id="carrossel">
+        <img src="img1.jpg" alt="Imagem 1" class="active">
+        <img src="img2.jpg" alt="Imagem 2">
+        <img src="img3.jpg" alt="Imagem 3">
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre">
+        <h2>Sobre Nós</h2>
+        <p>Somos uma empresa especializada em soluções para condomínios.</p>
+    </section>
+
+    <!-- Serviços -->
+    <section class="servicos" id="servicos"></section>
+    
+    <button onclick="mostrarPedidos()">Mostrar Pedidos</button>
+    <p id="contador-pedidos">Total de pedidos realizados: 0</p>
+
+    <!-- Pedidos -->
+    <div class="pedido-container" id="pedido-container"></div>
+
+    <!-- Link do Site -->
+    <section class="link-site" id="link-site">
+        <h2>Link do Site</h2>
+        <p>Conheça mais sobre nossa startup, nossa visão e equipe.</p>
+        <div class="equipe">
+            <h3>CEO</h3>
+            <img src="ceo.jpg" alt="CEO">
+            <p>João Silva</p>
+        </div>
+        <div class="equipe">
+            <h3>CTO</h3>
+            <img src="cto.jpg" alt="CTO">
+            <p>Maria Santos</p>
+        </div>
+        <div class="protótipo">
+            <h3>Protótipo</h3>
+            <iframe src="https://www.youtube.com/embed/videoid" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <!-- Contato -->
+    <section id="contato">
+        <h2>Contato</h2>
+        <form id="formContato">
+            <input type="text" id="nome" name="nome" placeholder="Seu Nome" required>
+            <input type="email" id="email" name="email" placeholder="Seu E-mail" required>
+            <textarea id="mensagem" name="mensagem" rows="4" placeholder="Sua Mensagem" required></textarea>
+            <button type="submit">Enviar Mensagem</button>
+        </form>
+    </section>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>&copy; 2023 Sistema de Serviços para Condomínios</p>
+    </footer>
+
+    <script>
+        const servicos = [
+            { nome: "Manutenção", descricao: "Manutenção geral", preco: "100,00" },
+            { nome: "Construção", descricao: "Construção de obras", preco: "500,00" },
+            { nome: "Limpeza", descricao: "Limpeza de áreas comuns", preco: "50,00" },
+            { nome: "Pintura", descricao: "Pintura de fachadas", preco: "300,00" },
+            { nome: "Jardinagem", descricao: "Cuidado de jardins", preco: "150,00" }
+        ];
+
+        let isLogged = false;
+        let slideIndex = 0;
+
+        function login() {
+            isLogged = true;
+            document.querySelector('.btn-login').style.display = 'none';
+            document.querySelector('.btn-logout').style.display = 'block';
+            showToast("Bem-vindo! Você está logado.");
+        }
+
+        function logout() {
+            isLogged = false;
+            document.querySelector('.btn-login').style.display = 'block';
+            document.querySelector('.btn-logout').style.display = 'none';
+            showToast("Você saiu da conta.");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        function renderizarServicos() {
+            const servicosContainer = document.getElementById('servicos');
+            servicosContainer.innerHTML = "";
+            servicos.forEach(servico => {
+                const servicoDiv = document.createElement('div');
+                servicoDiv.className = 'servico';
+                servicoDiv.innerHTML = `
+                    <h2>${servico.nome}</h2>
+                    <p>${servico.descricao}</p>
+                    <p>Preço: R$${servico.preco}</p>
+                    <button onclick="pedirServico('${servico.nome}', '${servico.descricao}')">Solicitar</button>
+                `;
+                servicosContainer.appendChild(servicoDiv);
+            });
+        }
+
+        function pedirServico(nome, descricao) {
+            if (isLogged) {
+                const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+                pedidos.push({ nome, descricao, data: new Date().toLocaleString() });
+                localStorage.setItem('pedidos', JSON.stringify(pedidos));
+                atualizarContador();
+                showToast("Serviço solicitado com sucesso!");
+            } else {
+                showToast("Por favor, faça login primeiro.");
+            }
+        }
+
+        function mostrarPedidos() {
+            const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+            const container = document.getElementById('pedido-container');
+            container.innerHTML = pedidos.map((p, index) => `
+                <div class="pedido">
+                    <h3>Serviço: ${p.nome}</h3>
+                    <p>Descrição: ${p.descricao}</p>
+                    <p>Data: ${p.data}</p>
+                    <button class="excluir" onclick="excluirPedido(${index})">Excluir</button>
+                </div>
+            `).join('');
+        }
+
+        function excluirPedido(index) {
+            const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+            pedidos.splice(index, 1);
+            localStorage.setItem('pedidos', JSON.stringify(pedidos));
+            mostrarPedidos();
+            showToast("Pedido excluído.");
+            atualizarContador();
+        }
+
+        function atualizarContador() {
+            const pedidos = JSON.parse(localStorage.getItem('pedidos')) || [];
+            document.getElementById('contador-pedidos').innerText = `Total de pedidos realizados: ${pedidos.length}`;
+        }
+
+        function enviarMensagem(event) {
+            event.preventDefault();
+            showToast("Mensagem enviada!");
+        }
+
+        function carrossel() {
+            const slides = document.querySelectorAll(".carrossel img");
+            slides.forEach((slide, index) => {
+                slide.classList.remove("active");
+                if (index === slideIndex) slide.classList.add("active");
+            });
+            slideIndex = (slideIndex + 1) % slides.length;
+        }
+
+        setInterval(carrossel, 3000);
+        document.getElementById('formContato').addEventListener('submit', enviarMensagem);
+
+        renderizarServicos();
+        atualizarContador();
+    </script>
+</body>
+</html>
